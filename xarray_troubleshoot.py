@@ -5,7 +5,6 @@ Read in SST satellite data
 """
 import numpy as np
 import xarray as xr
-import request_nc as rq_nc
 
 # filepath, filename = rq_nc.getSSTfiles(lat_bounds, lon_bounds, time_bounds)
 
