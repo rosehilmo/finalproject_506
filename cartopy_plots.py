@@ -16,6 +16,8 @@ import numpy as np
 import datetime
 #import pandas as pd
 from pandas import DataFrame
+import cmocean #need to install this first: pip install cmocean
+
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
@@ -67,10 +69,11 @@ time_label['date'] = time_label['date'].str.split(r'\ ').str.get(0)
 images = []
 mov = 'movie.gif'
 
-#time = [0,1] #temporary, just for testing
+#time = [0,1] #temporary, just for testing small number of images
 
 #save png slides to the filepath
 for x in time:
+    plt.close('all') #clean up figures before proceding wiht next step of loop.
     #data:
     sst = dataset.variables['analysed_sst'][x, :, :]
     lats = dataset.variables['latitude'][:]
@@ -81,7 +84,7 @@ for x in time:
     ax.coastlines()
     #latitude/longitude labels and lines (This can be modified based on what people like)
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                  linewidth=2, color='gray', alpha=0.5, linestyle='--')
+                  linewidth=0.5, color='gray', alpha=0.5, linestyle='--')
     gl.xlabels_top = False
     gl.ylables_top = False
     gl.xlines = True
@@ -93,15 +96,22 @@ for x in time:
     #gl.xlabel_style = {'color': 'red', 'weight': 'bold'} #more formating of labels
 
     #plotting data:
-    plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree()) #this plots the contourmap.
+    #vmin = 280 #setting minimim and meximum temperatures that will be plotted (in K)
+    #vmax = 310
+    cmap = cmocean.cm.thermal #setting colormap
+    #plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), vmin = vmin, vmax = vmax, colormap = cmap)
+    plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
 
     #Title labels:
     title = 'Sea surface temperature (K) on ' + time_label['date'][x]
     plt.title(title, size = 12, fontweight = 'bold')
 
-    # #Legend: NEEDS TO BE FIXED, right now its doing weird things inside the loop, i get multiple legends...
-    # cbar = plt.colorbar(plot, ax=ax)
-    # cbar.set_label('Temperature (K)', rotation = 270)
+    #Legend:
+    cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
+    #cbar.set_ticks([0,255])
+    cbar.ax.tick_params(labelsize = 'small')
+    ax2 = cbar.ax
+    ax2.text(4,0.35, 'Temperature (K)', rotation = 270, size = 10, fontweight = 'normal')
 
     #Saving plot:
     my_file= str(x) + '.png'
@@ -119,8 +129,9 @@ imageio.mimsave(os.path.join(filepath, mov), images)
     #time iteration make it nicer
     #add labels to graph... have the date displayed on each image --> DONE
     #Add title to image --> DONE
-    #Ad scalebar to image --> legend needs to be fixed
+    #Ad scalebar to image --> legend needs to be fixed... so that the legend scale is the same across all images?
     #Add if statements for missing data
     #What units is temperature in? K or C?
-    #
+    #Colormap selection? --> redblue cmap from cmocean --> DONE
+    #thinner linewidth on the lat/lon grid --> DONE
     #
