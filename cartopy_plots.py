@@ -61,7 +61,7 @@ time_label['date'] = time_label['date'].str.split(r'\ ').str.get(0)
 images = []
 mov = 'movie.gif'
 
-time = [0,1] #temporary, just for testing
+#time = [0,1] #temporary, just for testing
 
 #save png slides to the filepath
 for x in time:
@@ -93,9 +93,9 @@ for x in time:
     title = 'Sea surface temperature (K) on ' + time_label['date'][x]
     plt.title(title, size = 12, fontweight = 'bold')
 
-    #Legend: NEEDS TO BE FIXED, right now its doing weird things inside the loop, i get multiple legends... 
-    cbar = plt.colorbar(plot, ax=ax)
-    cbar.set_label('Temperature (K)', rotation = 270)
+    # #Legend: NEEDS TO BE FIXED, right now its doing weird things inside the loop, i get multiple legends...
+    # cbar = plt.colorbar(plot, ax=ax)
+    # cbar.set_label('Temperature (K)', rotation = 270)
 
     #Saving plot:
     my_file= str(x) + '.png'
@@ -113,6 +113,6 @@ imageio.mimsave(os.path.join(filepath, mov), images)
     #time iteration make it nicer
     #add labels to graph... have the date displayed on each image --> DONE
     #Add title to image --> DONE
-    #Ad scalebar to image
+    #Ad scalebar to image --> legend needs to be fixed
     #Add if statements for missing data
     #What units is temperature in? K or C?
