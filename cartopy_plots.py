@@ -16,6 +16,7 @@ import numpy as np
 import datetime
 #import pandas as pd
 from pandas import DataFrame
+import cmocean #need to install this first: pip install cmocean
 
 from cartopy import config
 import cartopy.crs as ccrs
@@ -88,11 +89,11 @@ for x in time:
     #gl.xlabel_style = {'color': 'red', 'weight': 'bold'} #more formating of labels
 
     #plotting data:
-    vmin = 280 #setting minimim and meximum temperatures that will be plotted (in K)
-    vmax = 310
-    cmap = 'Pastel1' #setting colormap
+    #vmin = 280 #setting minimim and meximum temperatures that will be plotted (in K)
+    #vmax = 310
+    cmap = cmocean.cm.thermal #setting colormap
     #plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), vmin = vmin, vmax = vmax, colormap = cmap)
-    plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree()) #this plots the contourmap.
+    plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
 
     #Title labels:
     title = 'Sea surface temperature (K) on ' + time_label['date'][x]
@@ -124,5 +125,6 @@ imageio.mimsave(os.path.join(filepath, mov), images)
     #Ad scalebar to image --> legend needs to be fixed... so that the legend scale is the same across all images?
     #Add if statements for missing data
     #What units is temperature in? K or C?
-    #Colormap selection?
+    #Colormap selection? --> redblue cmap from cmocean --> DONE
+    #thinner linewidth on the lat/lon grid
     #
