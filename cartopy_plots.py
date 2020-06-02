@@ -116,3 +116,5 @@ imageio.mimsave(os.path.join(filepath, mov), images)
     #Ad scalebar to image --> legend needs to be fixed
     #Add if statements for missing data
     #What units is temperature in? K or C?
+    #
+    #
