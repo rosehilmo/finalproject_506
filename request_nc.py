@@ -26,7 +26,7 @@ def getSSTfiles(lat_bounds,lon_bounds,time_bounds):
     r = requests.get(sst_url)
     if r.status_code == 404:
         return ['Request failed: No data in time period or wrong request format']
-    filename='noaacwBLENDEDsstDaily' + time_bounds[0] + '_' + time_bounds[1] +'.nc'
+    filename='noaacwBLENDEDsstDaily' + time_bounds[0][0:10]  + '_' + time_bounds[1][0:10]  +'.nc'
     filepath='SST_files/'
     if os.path.isdir(filepath) == False:
         os.mkdir(filepath)
