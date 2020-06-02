@@ -77,7 +77,7 @@ for x in time:
     ax.coastlines()
     #latitude/longitude labels and lines (This can be modified based on what people like)
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                  linewidth=2, color='gray', alpha=0.5, linestyle='--')
+                  linewidth=0.5, color='gray', alpha=0.5, linestyle='--')
     gl.xlabels_top = False
     gl.ylables_top = False
     gl.xlines = True
@@ -126,5 +126,5 @@ imageio.mimsave(os.path.join(filepath, mov), images)
     #Add if statements for missing data
     #What units is temperature in? K or C?
     #Colormap selection? --> redblue cmap from cmocean --> DONE
-    #thinner linewidth on the lat/lon grid
+    #thinner linewidth on the lat/lon grid --> DONE
     #
