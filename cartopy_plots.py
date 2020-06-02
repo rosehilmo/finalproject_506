@@ -16,22 +16,28 @@ import numpy as np
 import datetime
 #import pandas as pd
 from pandas import DataFrame
-
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+import request_nc   
 
 #################
 #open and read the dataset, save an iterable range of times
     #note to zinka: time iterable is fricken stupid as it stands
 #################
 
+lat_bounds=[-20,20]  
+lon_bounds=[-15,15]    
+time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z'] 
+
+[filepathSST,filenameSST]=request_nc.getSSTfiles(lat_bounds,lon_bounds,time_bounds)   
+
 #create filepath to save png files to
 filepath='PNG_files/'
 if os.path.isdir(filepath) == False:
     os.mkdir(filepath)
 
-dataset = netcdf_dataset('noaacwBLENDEDsstDaily_8423_ee32_0effevan.nc')
+dataset = netcdf_dataset(filepathSST+filenameSST,"r",format="NETCDF3_64BIT_DATA")
 time = dataset.variables['analysed_sst'][:,0,0]
 time=len(time)
 time=np.arange(time)
