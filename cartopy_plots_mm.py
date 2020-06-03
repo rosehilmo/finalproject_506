@@ -82,19 +82,18 @@ for x in time:
 #specify temperature scale
     temp_scale = 'Celsius'
     if temp_scale == 'Fahrenheit':
-        sst_plot = np.zeros(len(sst))
-        for i in range(0,len(sst)):
-            sst_plot[i] = sst[i] * (9/5) / 459.67 #convert Kelvin to Fahrenheit 
+        sst_plot = np.zeros(len(time), len(lats), len(lons))
+        sst_plot[x,:,:] = sst[i] * (9/5) / 459.67 #convert Kelvin to Fahrenheit 
 
-    if temp_scale == 'Celsius':
-        sst_plot = np.zeros(len(sst))
-        for i in range(0,len(sst)):
-            sst_plot[i] = sst[i] - 273.15 #convert Kelvin to Celsius
+    # if temp_scale == 'Celsius':
+    #     sst_plot = np.zeros(len(sst))
+    #     for i in range(0,len(sst)):
+    #         sst_plot[i] = sst[i] - 273.15 #convert Kelvin to Celsius
 
-    if temp_scale == 'Kelvin':
-        sst_plot = np.zeros(len(sst))
-        for i in range(0,len(sst)):
-            sst_plot[i] = sst[i] #data is already in Kelvin units
+    # if temp_scale == 'Kelvin':
+    #     sst_plot = np.zeros(len(sst))
+    #     for i in range(0,len(sst)):
+    #         sst_plot[i] = sst[i] #data is already in Kelvin units
 
     #This code plots on the Plate Caree maps
     ax = plt.axes(projection=ccrs.PlateCarree())
@@ -117,7 +116,7 @@ for x in time:
     #vmax = 310
     cmap = cmocean.cm.thermal #setting colormap
     #plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), vmin = vmin, vmax = vmax, colormap = cmap)
-    plot = plt.contourf(lons, lats, sst_plot, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
+    plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
 
     #Title labels:
     title = 'Sea surface temperature (K) on ' + time_label['date'][x]
