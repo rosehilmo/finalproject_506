@@ -1,0 +1,12 @@
+name: finalproject_506
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy
+  - pandas
+  - python
+  - matplotlib
+  - cmocean
+  - cartopy
+  - xarray
