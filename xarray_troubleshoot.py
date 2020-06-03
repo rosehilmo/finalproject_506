@@ -7,7 +7,6 @@ import numpy as np
 import xarray as xr
 import datetime
 import matplotlib.pyplot as plt
-import imageio
 import os
 import requests
 import matplotlib.ticker as mticker
@@ -16,7 +15,6 @@ import datetime
 #import pandas as pd
 from pandas import DataFrame
 import cmocean #need to install this first: pip install cmocean
-
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
@@ -126,6 +124,7 @@ for x in time:
     cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
     #cbar.set_ticks([0,255])
     cbar.ax.tick_params(labelsize = 'small')
+    
     ax2 = cbar.ax
     ax2.text(4,0.35, 'Temperature (' + temp_scale_dict[scale_selected] + ')', rotation = 270, size = 10, fontweight = 'normal')
 
