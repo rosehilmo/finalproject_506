@@ -30,6 +30,7 @@ filepath, filename = request_nc.getSSTfiles(lat_bounds, lon_bounds, time_bounds)
 #ask user for the preferred temperature scale
 temp_scale_dict = ['Kelvin', 'Celsius', 'Fahrenheit']
 specify_scale = input ('Enter a number to specify the temperature scale. \nOptions: \n0 = Kelvin \n1 = Celsius \n2 = Fahrenheit \n')
+# for some reason I couldn't get these working:
 # if (specify_scale != 0) and (specify_scale != 1) and (specify_scale != 2):
 # 	specify_scale = 0
 # if specify_scale not in range(0,2):
@@ -56,11 +57,6 @@ def nc_to_xr(filepath, filename):
 	
 	return(data_xr)
 
-# path_in='/Users/MMStoll/Python/Data/EffectiveComputing_Data/NOAA_SST_Daily.nc'
-# path_in1='/Users/MMStoll/Python/Data/EffectiveComputing_Data/testSST.nc'
-
-# data_xr = nc_to_xr(path_in)
-# data_xr1 = nc_to_xr(path_in1)
 data_xr = nc_to_xr(filepath, filename)
 
 time = data_xr.variables['analysed_sst'][:,0,0]
