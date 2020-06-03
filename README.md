@@ -6,6 +6,7 @@ Clone git repository in yout home directory.
 Setup environment and get essential packages with these commands:
  
 conda env create --quiet --file environment.yml
+
 conda activate finalproject_506
 
 
