@@ -126,6 +126,7 @@ for x in time:
     cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
     #cbar.set_ticks([0,255])
     cbar.ax.tick_params(labelsize = 'small')
+    cbar.set_clim(cmin,cmax)
     ax2 = cbar.ax
     ax2.text(4,0.35, 'Temperature (' + temp_scale_dict[scale_selected] + ')', rotation = 270, size = 10, fontweight = 'normal')
 

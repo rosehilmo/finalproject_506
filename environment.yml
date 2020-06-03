@@ -10,3 +10,6 @@ dependencies:
   - cmocean
   - cartopy
   - xarray
+  - ipython
+  - netCDF4
+  - imageio
