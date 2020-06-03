@@ -82,6 +82,9 @@ if temp_scale == 'Fahrenheit':
 if temp_scale == 'Celsius':
     cmax=max_k - 273.15
     cmin=min_k - 273.15
+if temp_scale == 'Kelvin':
+    cmax=max_k
+    cmin=min_k
 
 for x in time:
     plt.close('all') #clean up figures before proceding wiht next step of loop.
@@ -141,9 +144,10 @@ for x in time:
 
     #Legend:
     cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
+    plt.clim(cmin,cmax)
     #cbar.set_ticks([0,255])
     cbar.ax.tick_params(labelsize = 'small')
-    cbar.set_clim(cmin,cmax)
+    
     ax2 = cbar.ax
     ax2.text(4,0.35, 'Temperature (' + temp_scale + ')', rotation = 270, size = 10, fontweight = 'normal')
 
