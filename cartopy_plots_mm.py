@@ -1,5 +1,5 @@
 """
-Plots netCDF sea surface temperature for eaxh timeopint and generates a .gif movie for the whole time series.
+Plots netCDF sea surface temperature for eaxh timeopint and generates a .gif movie_fileie for the whole time series.
 
 """
 #################
@@ -21,18 +21,20 @@ import cmocean #need to install this first: pip install cmocean
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import request_nc
+import request_nc   
 
 #################
 #open and read the dataset, save an iterable range of times
     #note to zinka: time iterable is fricken stupid as it stands
 #################
 
-lat_bounds=[-20,20]
-lon_bounds=[-15,15]
-time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z']
+lat_bounds=[-20,20]  
+lon_bounds=[-15,15]    
+time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z'] 
+temp_scale = 'Celsius'
+movie_file = 'movie.gif'
 
-[filepathSST,filenameSST]=request_nc.getSSTfiles(lat_bounds,lon_bounds,time_bounds)
+[filepathSST,filenameSST]=request_nc.getSSTfiles(lat_bounds,lon_bounds,time_bounds)   
 
 #create filepath to save png files to
 filepath='PNG_files/'
@@ -45,12 +47,6 @@ time=len(time)
 time=np.arange(time)
 time=np.asarray(time)
 print(time)
-
-#################
-# Getting min and max absolute sst for entire dataset:
-#################
-
-
 
 #################
 # Getting date labels to put in the images:
@@ -73,17 +69,48 @@ time_label['date'] = time_label['date'].str.split(r'\ ').str.get(0)
 
 #preallocate
 images = []
-mov = 'movie.gif'
 
 #time = [0,1] #temporary, just for testing small number of images
 
 #save png slides to the filepath
+max_k=np.max(dataset.variables['analysed_sst'][:,:,:])   
+min_k=np.min(dataset.variables['analysed_sst'][:,:,:])  
+
+if temp_scale == 'Fahrenheit':
+    cmax=max_k * (9/5) - 459.67
+    cmin=min_k * (9/5) - 459.67
+if temp_scale == 'Celsius':
+    cmax=max_k - 273.15
+    cmin=min_k - 273.15
+
 for x in time:
     plt.close('all') #clean up figures before proceding wiht next step of loop.
     #data:
     sst = dataset.variables['analysed_sst'][x, :, :]
     lats = dataset.variables['latitude'][:]
     lons = dataset.variables['longitude'][:]
+
+#specify temperature scale
+    if temp_scale == 'Kelvin':
+        sst_plot=sst
+    if temp_scale == 'Fahrenheit':
+        #sst_plot = np.zeros(len(time), len(lats), len(lons))
+        #sst_plot[x,:,:] = sst[i] * (9/5) - 459.67 #convert Kelvin to Fahrenheit 
+        sst_plot=np.subtract(np.multiply(sst,9/5),459.67)
+    if temp_scale == 'Celsius':
+        #sst_plot = np.zeros(len(time), len(lats), len(lons))
+        #sst_plot[x,:,:] = sst[i] - 273.15 #convert Kelvin to Fahrenheit 
+        sst_plot=np.subtract(sst,273.15)
+
+    # if temp_scale == 'Celsius':
+    #     sst_plot = np.zeros(len(sst))
+    #     for i in range(0,len(sst)):
+    #         sst_plot[i] = sst[i] - 273.15 #convert Kelvin to Celsius
+
+    # if temp_scale == 'Kelvin':
+    #     sst_plot = np.zeros(len(sst))
+    #     for i in range(0,len(sst)):
+    #         sst_plot[i] = sst[i] #data is already in Kelvin units
 
     #This code plots on the Plate Caree maps
     ax = plt.axes(projection=ccrs.PlateCarree())
@@ -106,18 +133,19 @@ for x in time:
     #vmax = 310
     cmap = cmocean.cm.thermal #setting colormap
     #plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), vmin = vmin, vmax = vmax, colormap = cmap)
-    plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
+    plot = plt.contourf(lons, lats, sst_plot, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
 
     #Title labels:
-    title = 'Sea surface temperature (K) on ' + time_label['date'][x]
+    title = 'Sea surface temperature (' + temp_scale[0] + ') on ' + time_label['date'][x]
     plt.title(title, size = 12, fontweight = 'bold')
 
     #Legend:
     cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
-    #plt.clim(min_temp, max_temp)
+    #cbar.set_ticks([0,255])
     cbar.ax.tick_params(labelsize = 'small')
+    cbar.set_clim(cmin,cmax)
     ax2 = cbar.ax
-    ax2.text(4,0.35, 'Temperature (K)', rotation = 270, size = 10, fontweight = 'normal')
+    ax2.text(4,0.35, 'Temperature (' + temp_scale + ')', rotation = 270, size = 10, fontweight = 'normal')
 
     #Saving plot:
     my_file= str(x) + '.png'
@@ -125,7 +153,7 @@ for x in time:
     images.append(imageio.imread(os.path.join(filepath, my_file)))
     plt.show()
 
-imageio.mimsave(os.path.join(filepath, mov), images)
+imageio.mimsave(os.path.join(filepath, movie_file), images)
 #Alternative way to make gif*but requires ImageMagic, which might not be worrth it.
 #convert -delay 45 -loop 0 *.png movie2.gif #lets you sepcify how fast you want the images to switch.
 
