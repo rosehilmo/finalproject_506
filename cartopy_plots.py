@@ -21,18 +21,18 @@ import cmocean #need to install this first: pip install cmocean
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import request_nc   
+import request_nc
 
 #################
 #open and read the dataset, save an iterable range of times
     #note to zinka: time iterable is fricken stupid as it stands
 #################
 
-lat_bounds=[-20,20]  
-lon_bounds=[-15,15]    
-time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z'] 
+lat_bounds=[-20,20]
+lon_bounds=[-15,15]
+time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z']
 
-[filepathSST,filenameSST]=request_nc.getSSTfiles(lat_bounds,lon_bounds,time_bounds)   
+[filepathSST,filenameSST]=request_nc.getSSTfiles(lat_bounds,lon_bounds,time_bounds)
 
 #create filepath to save png files to
 filepath='PNG_files/'
@@ -45,6 +45,12 @@ time=len(time)
 time=np.arange(time)
 time=np.asarray(time)
 print(time)
+
+#################
+# Getting min and max absolute sst for entire dataset:
+#################
+
+
 
 #################
 # Getting date labels to put in the images:
@@ -108,7 +114,7 @@ for x in time:
 
     #Legend:
     cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
-    #cbar.set_ticks([0,255])
+    #plt.clim(min_temp, max_temp)
     cbar.ax.tick_params(labelsize = 'small')
     ax2 = cbar.ax
     ax2.text(4,0.35, 'Temperature (K)', rotation = 270, size = 10, fontweight = 'normal')
