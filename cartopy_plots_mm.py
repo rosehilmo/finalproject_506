@@ -30,7 +30,7 @@ import request_nc
 
 lat_bounds=[-20,20]  
 lon_bounds=[-15,15]    
-time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z'] 
+time_bounds=['2017-08-01T12:00:00Z','2017-08-10T12:00:00Z'] 
 temp_scale = 'Celsius'
 movie_file = 'movie.gif'
 
@@ -97,23 +97,10 @@ for x in time:
     if temp_scale == 'Kelvin':
         sst_plot=sst
     if temp_scale == 'Fahrenheit':
-        #sst_plot = np.zeros(len(time), len(lats), len(lons))
-        #sst_plot[x,:,:] = sst[i] * (9/5) - 459.67 #convert Kelvin to Fahrenheit 
         sst_plot=np.subtract(np.multiply(sst,9/5),459.67)
     if temp_scale == 'Celsius':
-        #sst_plot = np.zeros(len(time), len(lats), len(lons))
-        #sst_plot[x,:,:] = sst[i] - 273.15 #convert Kelvin to Fahrenheit 
         sst_plot=np.subtract(sst,273.15)
 
-    # if temp_scale == 'Celsius':
-    #     sst_plot = np.zeros(len(sst))
-    #     for i in range(0,len(sst)):
-    #         sst_plot[i] = sst[i] - 273.15 #convert Kelvin to Celsius
-
-    # if temp_scale == 'Kelvin':
-    #     sst_plot = np.zeros(len(sst))
-    #     for i in range(0,len(sst)):
-    #         sst_plot[i] = sst[i] #data is already in Kelvin units
 
     #This code plots on the Plate Caree maps
     ax = plt.axes(projection=ccrs.PlateCarree())
@@ -144,13 +131,13 @@ for x in time:
 
     #Legend:
     cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
-    plt.clim(cmin,cmax)
+    #plt.clim(cmin,cmax)
     #cbar.set_ticks([0,255])
-    cbar.ax.tick_params(labelsize = 'small')
-    
+    #cbar.ax.tick_params(labelsize = 'small')
+    #plot.set_clim(0,100)
     ax2 = cbar.ax
     ax2.text(4,0.35, 'Temperature (' + temp_scale + ')', rotation = 270, size = 10, fontweight = 'normal')
-
+    ax2.clim(0,100)
     #Saving plot:
     my_file= str(x) + '.png'
     plt.savefig(os.path.join(filepath, my_file))
