@@ -2,6 +2,12 @@
 
 import os
 import requests
+from netCDF4 import Dataset as netcdf_dataset
+import numpy as np
+import datetime
+from pandas import DataFrame 
+
+
 
 def getSSTfiles(lat_bounds,lon_bounds,time_bounds):
 
@@ -33,3 +39,42 @@ def getSSTfiles(lat_bounds,lon_bounds,time_bounds):
     with open(filepath + filename, 'wb') as f:
         f.write(r.content)
         return [filepath,filename]
+
+
+def read_nc(filepath,filename):
+    """
+    Read satellite nc file
+    
+    :param string filepath: path to file
+    :param string filename: name of file
+
+    :return netcdf dataset: Array of sst over time and space
+
+    """
+
+    dataset = netcdf_dataset(filepath+filename,"r",format="NETCDF3_64BIT_DATA")
+    time = dataset.variables['analysed_sst'][:,0,0]
+    time=len(time)
+    time=np.arange(time)
+    time=np.asarray(time)
+    print(time)
+
+    #################
+    # Getting date labels to put in the images:
+    #################
+    time_label = dataset.variables['time'][:] #Time is in epoch time, need to convert it to human readable time
+    #Use datetime to convert to human readable:
+    time_list = []
+    for x in time:
+        lab = datetime.datetime.fromtimestamp(time_label[x]).strftime('%Y-%m-%d %H:%M:%S')
+        #print(lab)
+        time_list.append(lab)
+
+    #Convert to data frame, separate date from time into different columns, keep date column only:
+    time_label = DataFrame(time_list, columns=['date'])
+    time_label['date'] = time_label['date'].str.split(r'\ ').str.get(0)
+
+
+
+
+    return [dataset,time,time_label] 

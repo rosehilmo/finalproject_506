@@ -1,5 +1,5 @@
 """
-Plots netCDF sea surface temperature for eaxh timeopint and generates a .gif movie_fileie for the whole time series.
+Plots netCDF sea surface temperature for each timeopint and generates a .gif movie_file for the whole time series.
 
 """
 #################
