@@ -56,6 +56,8 @@ def read_nc(filepath,filename):
     :param string filename: name of file
 
     :return netcdf dataset: Array of sst over time and space
+    :return list: Time indices
+    :return list: Time labels
 
     """
 
@@ -85,12 +87,25 @@ def read_nc(filepath,filename):
 
 
 def plot_SST(dataset,time,time_label,temp_scale,filepath):
+
+    """
+    Make daily plots of SST in region and produce gif.
+    
+    :param netcdf dataset: sst dataset producted by read_nc
+    :param list time: time indices from read_nc
+    :param list time_label: List of time strings
+    :param int temp_scale: integer specifying F, C or Kelvin
+    :param string filepath: output folder to save figures to
+    """
     #################
     # plotting
     #################
 
     #preallocate
     images = []
+
+    if os.path.isdir(filepath)  == False:
+        os.mkdir(filepath)
 
     #time = [0,1] #temporary, just for testing small number of images
 
@@ -107,6 +122,7 @@ def plot_SST(dataset,time,time_label,temp_scale,filepath):
     if temp_scale == 0: #== 'Kelvin'
         cmax=max_k
         cmin=min_k
+
 
     for x in time:
         plt.close('all') #clean up figures before proceding wiht next step of loop.

@@ -29,4 +29,4 @@ filepath, filename = SST_functions.request_nc(lat_bounds,lon_bounds,time_bounds)
 
 [dataset,time,time_label] =  SST_functions.read_nc(filepath,filename)
 
-SST_functions.plot_SST(dataset,time,time_label,temp_scale,filepath)
+SST_functions.plot_SST(dataset,time,time_label,temp_scale,'Figures/')
