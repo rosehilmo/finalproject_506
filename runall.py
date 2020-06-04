@@ -1,18 +1,15 @@
 """
-beginnings of the wrapper script
+Wrapper script where variables are defined and functions are called.
 
 """
 
-############
-# Grabing data from web
-############
-
 import SST_functions
-#import xarray_troubleshoot
 
 lat_bounds=[-20,20]  
 lon_bounds=[-15,15]    
 time_bounds=['2017-08-01T12:00:00Z','2017-08-10T12:00:00Z'] 
+
+#####END OF PARAMETERS######
 
 #ask user for the preferred temperature scale
 temp_scale_dict = ['Kelvin', 'Celsius', 'Fahrenheit']
