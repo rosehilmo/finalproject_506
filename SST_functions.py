@@ -163,7 +163,7 @@ def plot_SST(dataset,time,time_label,temp_scale,filepath):
 
         #Legend:
         cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
-        plot.set_clim(0,100)
+        plot.set_clim(cmin,cmax)
         ax2 = cbar.ax
         ax2.text(4,0.35, 'Temperature (' + temp_scale_dict[temp_scale] + ')', rotation = 270, size = 10, fontweight = 'normal')
 
