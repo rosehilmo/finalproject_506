@@ -21,7 +21,7 @@ import cmocean #need to install this first: pip install cmocean
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import request_nc   
+import SST_functions 
 
 #################
 #open and read the dataset, save an iterable range of times
@@ -34,7 +34,7 @@ time_bounds=['2017-08-01T12:00:00Z','2017-08-10T12:00:00Z']
 temp_scale = 'Celsius'
 movie_file = 'movie.gif'
 
-[filepathSST,filenameSST]=request_nc.getSSTfiles(lat_bounds,lon_bounds,time_bounds)   
+[filepathSST,filenameSST]=SST_functions.request_nc(lat_bounds,lon_bounds,time_bounds)   
 
 #create filepath to save png files to
 filepath='PNG_files/'

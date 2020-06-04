@@ -9,7 +9,6 @@ conda env create --quiet --file environment.yml
 
 conda activate finalproject_506
 
-
 To run code in python:
 runall.py is a wrapper file that combines all the components of the code
 

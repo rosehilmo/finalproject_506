@@ -3,6 +3,7 @@
 Read in SST satellite data
 
 """
+import imageio
 import numpy as np
 import xarray as xr
 import datetime
@@ -18,12 +19,12 @@ import cmocean #need to install this first: pip install cmocean
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import request_nc
+import SST_functions
 
 lat_bounds=[-20,20]  
 lon_bounds=[-15,15]    
 time_bounds=['2017-08-01T12:00:00Z','2017-08-20T12:00:00Z'] 
-filepath, filename = request_nc.getSSTfiles(lat_bounds, lon_bounds, time_bounds)
+filepath, filename = SST_functions.request_nc(lat_bounds, lon_bounds, time_bounds)
 
 #ask user for the preferred temperature scale
 temp_scale_dict = ['Kelvin', 'Celsius', 'Fahrenheit']
