@@ -29,8 +29,8 @@ filepath, filename = request_nc.getSSTfiles(lat_bounds, lon_bounds, time_bounds)
 temp_scale_dict = ['Kelvin', 'Celsius', 'Fahrenheit']
 specify_scale = input ('Enter a number to specify the temperature scale. \nOptions: \n0 = Kelvin \n1 = Celsius \n2 = Fahrenheit \n')
 # for some reason I couldn't get these working:
-# if (specify_scale != 0) and (specify_scale != 1) and (specify_scale != 2):
-# 	specify_scale = 0
+#if (specify_scale != 0) and (specify_scale != 1) and (specify_scale != 2):
+	#specify_scale = 0
 # if specify_scale not in range(0,2):
 # 	specify_scale = 0
 scale_selected = int(specify_scale)
