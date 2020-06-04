@@ -5,11 +5,11 @@ import requests
 from netCDF4 import Dataset as netcdf_dataset
 import numpy as np
 import datetime
-from pandas import DataFrame 
+from pandas import DataFrame
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-import cmocean #need to install this first: pip install cmocean
+import cmocean
 
 from cartopy import config
 import cartopy.crs as ccrs
@@ -19,7 +19,7 @@ import imageio
 def request_nc(lat_bounds,lon_bounds,time_bounds):
 
     """
-    Gets global daily SST satellite data 2002-present 
+    Gets global daily SST satellite data 2002-present
     with 5km resolution in netCDF format from
     https://coastwatch.noaa.gov/erddap/griddap/noaacwBLENDEDsstDaily.html
     :param tuple lat_bounds: Latitudes bounding region of interest
@@ -51,7 +51,7 @@ def request_nc(lat_bounds,lon_bounds,time_bounds):
 def read_nc(filepath,filename):
     """
     Read satellite nc file
-    
+
     :param string filepath: path to file
     :param string filename: name of file
 
@@ -83,14 +83,14 @@ def read_nc(filepath,filename):
     time_label = DataFrame(time_list, columns=['date'])
     time_label['date'] = time_label['date'].str.split(r'\ ').str.get(0)
 
-    return [dataset,time,time_label] 
+    return [dataset,time,time_label]
 
 
 def plot_SST(dataset,time,time_label,temp_scale,filepath):
 
     """
     Make daily plots of SST in region and produce gif.
-    
+
     :param netcdf dataset: sst dataset producted by read_nc
     :param list time: time indices from read_nc
     :param list time_label: List of time strings
@@ -110,8 +110,8 @@ def plot_SST(dataset,time,time_label,temp_scale,filepath):
     #time = [0,1] #temporary, just for testing small number of images
 
     #save png slides to the filepath
-    max_k=np.max(dataset.variables['analysed_sst'][:,:,:])   
-    min_k=np.min(dataset.variables['analysed_sst'][:,:,:])  
+    max_k=np.max(dataset.variables['analysed_sst'][:,:,:])
+    min_k=np.min(dataset.variables['analysed_sst'][:,:,:])
 
     if temp_scale == 2: #=='Fahrenheit'
         cmax=max_k * (9/5) - 459.67
@@ -150,17 +150,11 @@ def plot_SST(dataset,time,time_label,temp_scale,filepath):
         gl.ylables_top = False
         gl.xlines = True
         gl.ylines = True
-        #gl.xlocator = mticker.FixedLocator([-180,-45,0,45,180]) #Right now, lat/long lines are absolute, need to make them relative for our data!
         gl.xfprmater = LONGITUDE_FORMATTER
         gl.yformatter = LATITUDE_FORMATTER
-        #gl.xlabel_style = {'size': 6, 'color': 'gray'} #formating of lables
-        #gl.xlabel_style = {'color': 'red', 'weight': 'bold'} #more formating of labels
 
         #plotting data:
-        #vmin = 280 #setting minimim and meximum temperatures that will be plotted (in K)
-        #vmax = 310
         cmap = cmocean.cm.thermal #setting colormap
-        #plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), vmin = vmin, vmax = vmax, colormap = cmap)
         plot = plt.contourf(lons, lats, sst_plot, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
 
         #Title labels:
@@ -169,20 +163,17 @@ def plot_SST(dataset,time,time_label,temp_scale,filepath):
 
         #Legend:
         cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
-        #plt.clim(cmin,cmax)
-        #cbar.set_ticks([0,255])
-        #cbar.ax.tick_params(labelsize = 'small')
-        #plot.set_clim(0,100)
+        plot.set_clim(0,100)
         ax2 = cbar.ax
         ax2.text(4,0.35, 'Temperature (' + temp_scale_dict[temp_scale] + ')', rotation = 270, size = 10, fontweight = 'normal')
-        # ax2.clim(0,100)
+
         #Saving plot:
         my_file= str(x) + '.png'
         plt.savefig(os.path.join(filepath, my_file))
         images.append(imageio.imread(os.path.join(filepath, my_file)))
-        plt.show()
+        #plt.show()
+
     movie_file = 'movie.gif'
     imageio.mimsave(os.path.join(filepath, movie_file), images)
-    #Alternative way to make gif*but requires ImageMagic, which might not be worrth it.
-    #convert -delay 45 -loop 0 *.png movie2.gif #lets you sepcify how fast you want the images to switch.
+
     return()
