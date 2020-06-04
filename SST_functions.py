@@ -6,8 +6,15 @@ from netCDF4 import Dataset as netcdf_dataset
 import numpy as np
 import datetime
 from pandas import DataFrame 
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
+import cmocean #need to install this first: pip install cmocean
 
+from cartopy import config
+import cartopy.crs as ccrs
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+import imageio
 
 def request_nc(lat_bounds,lon_bounds,time_bounds):
 
@@ -74,7 +81,92 @@ def read_nc(filepath,filename):
     time_label = DataFrame(time_list, columns=['date'])
     time_label['date'] = time_label['date'].str.split(r'\ ').str.get(0)
 
-
-
-
     return [dataset,time,time_label] 
+
+
+def plot_SST(dataset,time,time_label,temp_scale,filepath):
+    #################
+    # plotting
+    #################
+
+    #preallocate
+    images = []
+
+    #time = [0,1] #temporary, just for testing small number of images
+
+    #save png slides to the filepath
+    max_k=np.max(dataset.variables['analysed_sst'][:,:,:])   
+    min_k=np.min(dataset.variables['analysed_sst'][:,:,:])  
+
+    if temp_scale == 2: #=='Fahrenheit'
+        cmax=max_k * (9/5) - 459.67
+        cmin=min_k * (9/5) - 459.67
+    if temp_scale == 1: #== 'Celsius'
+        cmax=max_k - 273.15
+        cmin=min_k - 273.15
+    if temp_scale == 0: #== 'Kelvin'
+        cmax=max_k
+        cmin=min_k
+
+    for x in time:
+        plt.close('all') #clean up figures before proceding wiht next step of loop.
+        #data:
+        sst = dataset.variables['analysed_sst'][x, :, :]
+        lats = dataset.variables['latitude'][:]
+        lons = dataset.variables['longitude'][:]
+
+    #specify temperature scale
+        temp_scale_dict = ['Kelvin', 'Celsius', 'Fahrenheit']
+        if temp_scale == 0: #=='Kelvin'
+            sst_plot=sst
+        if temp_scale == 2: # =='Fahrenheit'
+            sst_plot=np.subtract(np.multiply(sst,9/5),459.67)
+        if temp_scale == 1: #=='Celsius'
+            sst_plot=np.subtract(sst,273.15)
+
+    #This code plots on the Plate Caree maps
+        ax = plt.axes(projection=ccrs.PlateCarree())
+        ax.coastlines()
+        #latitude/longitude labels and lines (This can be modified based on what people like)
+        gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
+                  linewidth=0.5, color='gray', alpha=0.5, linestyle='--')
+        gl.xlabels_top = False
+        gl.ylables_top = False
+        gl.xlines = True
+        gl.ylines = True
+        #gl.xlocator = mticker.FixedLocator([-180,-45,0,45,180]) #Right now, lat/long lines are absolute, need to make them relative for our data!
+        gl.xfprmater = LONGITUDE_FORMATTER
+        gl.yformatter = LATITUDE_FORMATTER
+        #gl.xlabel_style = {'size': 6, 'color': 'gray'} #formating of lables
+        #gl.xlabel_style = {'color': 'red', 'weight': 'bold'} #more formating of labels
+
+        #plotting data:
+        #vmin = 280 #setting minimim and meximum temperatures that will be plotted (in K)
+        #vmax = 310
+        cmap = cmocean.cm.thermal #setting colormap
+        #plot = plt.contourf(lons, lats, sst, 60,transform=ccrs.PlateCarree(), vmin = vmin, vmax = vmax, colormap = cmap)
+        plot = plt.contourf(lons, lats, sst_plot, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
+
+        #Title labels:
+        title = 'Sea surface temperature (' + temp_scale_dict[temp_scale] + ') on ' + time_label['date'][x]
+        plt.title(title, size = 12, fontweight = 'bold')
+
+        #Legend:
+        cbar = plt.colorbar(plot, orientation = 'vertical', pad = 0.1)
+        #plt.clim(cmin,cmax)
+        #cbar.set_ticks([0,255])
+        #cbar.ax.tick_params(labelsize = 'small')
+        #plot.set_clim(0,100)
+        ax2 = cbar.ax
+        ax2.text(4,0.35, 'Temperature (' + temp_scale_dict[temp_scale] + ')', rotation = 270, size = 10, fontweight = 'normal')
+        # ax2.clim(0,100)
+        #Saving plot:
+        my_file= str(x) + '.png'
+        plt.savefig(os.path.join(filepath, my_file))
+        images.append(imageio.imread(os.path.join(filepath, my_file)))
+        plt.show()
+    movie_file = 'movie.gif'
+    imageio.mimsave(os.path.join(filepath, movie_file), images)
+    #Alternative way to make gif*but requires ImageMagic, which might not be worrth it.
+    #convert -delay 45 -loop 0 *.png movie2.gif #lets you sepcify how fast you want the images to switch.
+    return()
