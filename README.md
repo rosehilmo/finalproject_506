@@ -1,4 +1,4 @@
-## finalproject_506
+# finalproject_506
 Final project for Zinka, Mary Margaret, Evan, and Rose for OCEAN506. Downloads sea surface temperature (SST) satellite data as .nc files for regions and times of your choice from 2002-present. Then daily SST maps are plotted and saved as .png files, and finally combined as a .gif movie.
 
 # Instructions for setup:
