@@ -8,9 +8,7 @@ import datetime
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-
 import cmocean
-
 from cartopy import config
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
@@ -86,7 +84,7 @@ def read_nc(filepath,filename):
     return [dataset,time,time_label]
 
 
-def plot_SST(dataset,time,time_label,temp_scale,filepath):
+def plot_SST(dataset,time,time_label,temp_scale,filepath,cmap=cmocean.cm.thermal):
 
     """
     Make daily plots of SST in region and produce gif.
@@ -154,7 +152,7 @@ def plot_SST(dataset,time,time_label,temp_scale,filepath):
         gl.yformatter = LATITUDE_FORMATTER
 
         #plotting data:
-        cmap = cmocean.cm.thermal #setting colormap
+        #cmap = cmocean.cm.thermal #setting colormap
         plot = plt.contourf(lons, lats, sst_plot, 60,transform=ccrs.PlateCarree(), cmap = cmap) #this plots the contourmap.
 
         #Title labels:
